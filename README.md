@@ -1,11 +1,11 @@
 # Week2Agsignment
-## Requirement
-• launch folder: contains launch files
-• scripts folder: contains your python code
-• urdf folder: contains the model files describing your robot
-• srv folder: contains your custom ROS services • msg folder: contains your custom ROS messages • CMakeLists.txt: list of cmake rules for compilation
-• Package.xml: Package information and dependencies
-1. pakename `wk2Assignment_3`
+## Requirement  
+pakename `wk2Assignment_3`
+*  launch folder: contains launch files
+*  scripts folder: contains your python code
+* urdf folder: contains the model files describing your robot
+* srv folder: contains your custom ROS services • msg folder: contains your custom ROS messages • CMakeLists.txt: list of cmake rules for compilation
+* Package.xml: Package information and dependencies
 ### 1. Urdf xacro.py  
 ### 2.1 Service HomingSignal.srv
 指定docking station，面对的朝向 发出信息"My wk2Bot reaches the charging station located at (xx, xx)"   
