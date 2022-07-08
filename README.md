@@ -9,7 +9,7 @@
 * Package.xml: Package information and dependencies
 ### 1. Urdf xacro.py  
 The tutorials can be found in [here](https://www.yuque.com/yulinlin-rf5a0/qfbvb9/xyctsx#E6cgE)
-### 2. Service
+### 2. Service.py
 1.  Service HomingSignal.srv: 指定docking station，面对的朝向 发出信息"My wk2Bot reaches the charging station located at (xx, xx)"   
 2.  SetBugBehaviour.srv: 指定机器人移动速度  
 ## 3. Bug1,Bug2 and Client.py  
