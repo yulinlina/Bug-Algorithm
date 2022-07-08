@@ -1,6 +1,6 @@
 # Week2Agsignment
 ## Requirement  
-pakename `wk2Assignment_3`
+***pakename*** `wk2Assignment_3`
 *  launch folder: contains launch files
 *  scripts folder: contains your python code
 * urdf folder: contains the model files describing your robot
