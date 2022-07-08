@@ -1,11 +1,14 @@
 # Week2Agsignment
-
-## 1. Urdf xacro.py  
+## Requirement
+1. pakename `wk2Assignment_3`
+### 1. Urdf xacro.py  
 ### 2.1 Service HomingSignal.srv
 指定docking station，面对的朝向 发出信息"My wk2Bot reaches the charging station located at (xx, xx)"   
 ### 2.2 SetBugBehaviour.srv
 指定机器人移动速度  
 ## 3. Bug1&Bug2  
+name : `Bug1.py`  
+name : `Bug2.py` 
 ##  4.go_to_point_switch和wall_follower_switch
 改srv的类型  
 ## 5.
