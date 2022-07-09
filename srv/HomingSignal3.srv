@@ -1,0 +1,6 @@
+bool flag
+float32 des_x
+float32 des_y
+int16 direction
+---
+string message
