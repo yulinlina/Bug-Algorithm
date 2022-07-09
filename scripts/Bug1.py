@@ -15,11 +15,12 @@ import math
 class Bug:
     def __init__(self,mode=1):
        
-
+        rospy.loginfo("bug1 is run")
         self.state=0
         self.state_desc=[
             "Go to the point",
-            "Follow the wall"
+            "Circumnavigate",
+            "Go to the closet point"
         ]
         self.yaw = 0
         self.raw_error_allowed = 5 * (math.pi / 180) # 5 degrees
@@ -30,7 +31,12 @@ class Bug:
         self.desired_position = Point()
         self.desired_position.x = rospy.get_param('des_pos_x')
         self.desired_position.y = rospy.get_param('des_pos_y')
-       
+
+        self.circumnavigate_starting_point=Point()
+        self.circumnavigate_closet_point=Point()
+
+        self.count_state_time=0
+        self.count_loop=0
         
         if mode==2:
               teleport=rospy.ServiceProxy('wk2Bot3/teleport_absolute',TeleportAbsolute)
@@ -62,49 +68,54 @@ class Bug:
                     break
 
                 if 0.15<self.regions['front'] < 1 :
+                    self.circumnavigate_starting_point=self.position
+                    self.circumnavigate_closet_point=self.position
                     self.change_state(1)
 
             elif self.state == 1:
                 desired_yaw = math.atan2(self.desired_position.y - self.position.y, self.desired_position.x - self.position.x)
                 err_yaw = self.normalize_angle(desired_yaw - self.yaw)
 
+                if self.calc_dist_points(self.position,self.desired_position)<self.calc_dist_points(self.circumnavigate_closet_point,self.desired_position):
+                    self.circumnavigate_closet_point=self.position
+                if self.count_state_time>5 and self.calc_dist_points(self.position,self.circumnavigate_starting_point)<0.2:
+                    self.change_state(2)
                 # less than 30 degrees
-                if math.fabs(err_yaw) < (math.pi / 6) and \
-                        self.regions['front'] > 1.5 and self.regions['fright'] > 1 and self.regions['fleft'] > 1:
+            elif self.state==2:
+                if self.calc_dist_points(self.position,self.calc_dist_points)<0.2:
                     self.change_state(0)
-
-                # between 30 and 90
-                if err_yaw > 0 and \
-                        math.fabs(err_yaw) > (math.pi / 6) and \
-                        math.fabs(err_yaw) < (math.pi / 2) and \
-                        self.regions['left'] > 1.5 and  self.regions['fleft'] > 1:
-                    self.change_state(0)
-
-                if err_yaw < 0 and \
-                        math.fabs(err_yaw) > (math.pi / 6) and \
-                        math.fabs(err_yaw) < (math.pi / 2) and \
-                        self.regions['right'] > 1.5 and self.regions['fright'] > 1:
-                    self.change_state(0)
+            
+            self.count_loop+=1
+            if self.count_loop==20:
+                self.count_state_time+=1
+                self.count_loop=0
             rate.sleep()
 
           
 
     def change_state(self,state):
         self.state=state
-        # print("***************changed follow wall or go to point************************")
+        # print("***************changed  go to point or go to closet follow wall or************************")
         log= "state changed: %s"%self.state_desc[state]
         rospy.loginfo(log)
+
+        self.count_state_time=0
        
         if state==0:
             self.go_to_point(True,self.desired_position.x,self.desired_position.y,0)
             self.follow_wall(False,self.desired_position.x,self.desired_position.y,0) 
 
         if state==1:
-            self.follow_wall(True,self.desired_position.x,self.desired_position.y,0)
             self.go_to_point(False,self.desired_position.x,self.desired_position.y,0)
+            self.follow_wall(True,self.desired_position.x,self.desired_position.y,0)
+
+        if state==2:
+            self.go_to_point(False,self.desired_position.x,self.desired_position.y,0)
+            self.follow_wall(True,self.desired_position.x,self.desired_position.y,0)    
 
 
-           
+    def calc_dist_points(self,point1,point2):
+        return math.sqrt((point1.y-point2.y)**2+(point1.x-point2.x)**2)
        # rospy.loginfo(resp)
 
     def clbk_odom(self,msg):
@@ -139,13 +150,16 @@ class Bug:
             angle = angle - (2 * math.pi * angle) / (math.fabs(angle))
         return angle
 
-def clbk_bug0(req):
+
+def clbk_bug1(req):
+    rospy.loginfo("callback in bug1")
     if req.data:
         Bug()
     return True,"Done!"
-    
+
 if __name__=="__main__":
-    rospy.init_node("bug0service")
+    rospy.init_node("bug1service")
   #  mode =int(input("Please choose the mode \n1 go to the point using bug0 algorithm \n 2 teleport"))
-    rospy.Service("bug0",SetBool,clbk_bug0)
+    rospy.Service("bug1",SetBool,clbk_bug1)
     rospy.spin()
+   
