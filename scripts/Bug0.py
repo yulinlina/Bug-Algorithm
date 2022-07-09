@@ -30,6 +30,7 @@ class Bug:
         self.desired_position = Point()
         self.desired_position.x = rospy.get_param('des_pos_x')
         self.desired_position.y = rospy.get_param('des_pos_y')
+       
         
         if mode==2:
               teleport=rospy.ServiceProxy('wk2Bot3/teleport_absolute',TeleportAbsolute)
@@ -93,14 +94,14 @@ class Bug:
         # print("***************changed follow wall or go to point************************")
         log= "state changed: %s"%self.state_desc[state]
         rospy.loginfo(log)
-
+       
         if state==0:
-            self.go_to_point(True)
-            self.follow_wall(False) 
+            self.go_to_point(True,self.desired_position.x,self.desired_position.y,0)
+            self.follow_wall(False,self.desired_position.x,self.desired_position.y,0) 
 
         if state==1:
-            self.follow_wall(True)
-            self.go_to_point(False)
+            self.follow_wall(True,self.desired_position.x,self.desired_position.y,0)
+            self.go_to_point(False,self.desired_position.x,self.desired_position.y,0)
 
 
            
