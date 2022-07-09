@@ -8,7 +8,7 @@
 * CMakeLists.txt: list of cmake rules for compilation
 * Package.xml: Package information and dependencies
 ## Usage
-use the command `roslaunch wk2Assignment wk2Assignment.launcg`  
+use the command `roslaunch wk2Assignment wk2Assignment.launch`  
 then type the number of the bug algorithm you want to use  
 0: bug0  
 1: bug1  
