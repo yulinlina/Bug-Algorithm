@@ -13,7 +13,7 @@
   </include>
   
   <arg name="x" default="0"/>
-  <arg name="y" default="0"/>
+  <arg name="y" default="-9"/>
   <arg name="z" default="0"/>
   <arg name="roll" default="0"/>
   <arg name="pitch" default="0"/>
@@ -25,16 +25,16 @@
   <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" output="screen"
      args="-urdf -model wk2Bot3 -param robot_description -x $(arg x) -y $(arg y) -z $(arg z) -Y $(arg yaw)" />
 
-<!--      
+     
   <arg name="des_x" default="-1"/>
   <arg name="des_y" default="2"/>
   <param name="des_pos_x" value="$(arg des_x)"/>
   <param name="des_pos_y" value="$(arg des_y)"/>
   <param name="th_yaw" value="2"/>
   <param name="th_dist" value="0.3"/> 
-  <node pkg="wk2homework_2020141440041" type="Bug0.py" name="bug0" output="screen"/>
-  <node pkg="wk2homework_2020141440041" type="GoToPoint.py" name="go_to_point" output="screen"/>
-  <node pkg="wk2homework_2020141440041" type="FollowWall.py" name="follow_wall" output="screen"/> -->
+  <node pkg="wk2Assignment_3" type="Bug0.py" name="bug0" output="screen"/>
+  <node pkg="wk2Assignment_3" type="GoToPoint.py" name="go_to_point" output="screen"/>
+  <node pkg="wk2Assignment_3" type="FollowWall.py" name="follow_wall" output="screen"/>
   
 
 </launch>

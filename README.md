@@ -8,7 +8,11 @@
 * CMakeLists.txt: list of cmake rules for compilation
 * Package.xml: Package information and dependencies
 ### 1. Urdf xacro.py  
-The tutorials can be found in [here](https://www.yuque.com/yulinlin-rf5a0/qfbvb9/xyctsx#E6cgE)
+The tutorials can be found in [here](https://www.yuque.com/yulinlin-rf5a0/qfbvb9/xyctsx#E6cgE)  
+The topic used: 
+laser : `/wk2Bot3/laser/scan`
+cmd_vel: `wk2Bot3/cmd_vel`
+odom:  `odom` 
 ### 2. Service.py
 1.  Service HomingSignal.srv: 指定docking station，面对的朝向 发出信息"My wk2Bot reaches the charging station located at (xx, xx)"   
 2.  SetBugBehaviour.srv: 指定机器人移动速度  

@@ -6,10 +6,12 @@ from sensor_msgs.msg import LaserScan
 from geometry_msgs.msg import Twist, Point
 from nav_msgs.msg import Odometry
 from tf import transformations
+from wk2Assignment_3.srv import HomingSignal3
+
 
 # A partially completed python class used to move a robot from any point to a desired point
 import math
-from std_srvs.srv import SetBool
+
 class GoToPoint:
 
     def __init__(self):
@@ -37,11 +39,11 @@ class GoToPoint:
         self.dist_threshold = rospy.get_param('th_dist') # unit: meter
 
         #Need to change the topic used to command the robot to move based on what you defined in your urdf file.
-        self.pub_vel = rospy.Publisher('week2bot/cmd_vel', Twist, queue_size=10)
+        self.pub_vel = rospy.Publisher('wk2Bot3/cmd_vel', Twist, queue_size=10)
 		
 		#Need to change the /odom topic based on what you defined in your urdf file.   
         self.sub_odom = rospy.Subscriber('/odom', Odometry, self.callback_odom)
-        rospy.Service('GoToPoint_switch',SetBool,self.HandleGoToPoint)
+        rospy.Service('GoToPoint_switch',HomingSignal3,self.HandleGoToPoint)
 
         rate = rospy.Rate(20)
         while not rospy.is_shutdown():
@@ -61,8 +63,8 @@ class GoToPoint:
                 rate.sleep()
     
     def HandleGoToPoint(self,req):
-        self.active =req.data
-        return True,"Done!"
+        self.active =req.flag
+        return "Done!"
 
 
     def callback_odom(self,msg):
