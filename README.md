@@ -7,6 +7,12 @@
 * srv folder: contains your custom ROS services 
 * CMakeLists.txt: list of cmake rules for compilation
 * Package.xml: Package information and dependencies
+## Usage
+use the command `roslaunch wk2Assignment wk2Assignment.launcg`  
+then type the number of the bug algorithm you want to use  
+0: bug0  
+1: bug1  
+2: bug2  
 ### 1. Urdf xacro.py  
 The tutorials can be found in [here](https://www.yuque.com/yulinlin-rf5a0/qfbvb9/xyctsx#E6cgE)  
 The topic used: 
