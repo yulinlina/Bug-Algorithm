@@ -30,6 +30,8 @@
   <arg name="des_y" default="-4"/>
   <param name="des_pos_x" value="$(arg des_x)"/>
   <param name="des_pos_y" value="$(arg des_y)"/>
+  <param name="init_x" value="$(arg x)"/>
+  <param name="init_y" value="$(arg y)"/>
   <param name="th_yaw" value="2"/>
   <param name="th_dist" value="0.3"/> 
  
@@ -37,6 +39,7 @@
   <node pkg="wk2Assignment_3" type="FollowWall.py" name="follow_wall" output="screen"/>
   <node pkg="wk2Assignment_3" type="Bug0.py" name="bug0" output="screen"/>
   <node pkg="wk2Assignment_3" type="Bug1.py" name="bug1" output="screen"/>
+  <node pkg="wk2Assignment_3" type="Bug2.py" name="bug2" output="screen"/>
   <node pkg="wk2Assignment_3" type="Client.py" name="client" output="screen"/>
   
 

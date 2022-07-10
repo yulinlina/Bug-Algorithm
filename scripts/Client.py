@@ -27,14 +27,14 @@ if __name__ =="__main__":
 
     rospy.wait_for_service("bug0")
     rospy.wait_for_service("bug1")
-    # rospy.wait_for_service("bug2")
-    print("******************")
+    rospy.wait_for_service("bug2")
+    
 
     desired_position_x = rospy.get_param('des_pos_x')
     desired_position_y = rospy.get_param('des_pos_y')
     bug0 =rospy.ServiceProxy("bug0",HomingSignal3)
     bug1 =rospy.ServiceProxy("bug1",HomingSignal3)
-    # bug2 =rospy.ServiceProxy("bug2",SetBool)
+    bug2 =rospy.ServiceProxy("bug2",HomingSignal3)
 
     print("********************client is running***************************")
     mode = int(input("Please input the type of Bug algorithm you want to use \n 0 Bug0 \n 1 Bug1 \n 2 Bug2\n"))
@@ -43,10 +43,15 @@ if __name__ =="__main__":
     if mode==0:
         bug0(True, desired_position_x, desired_position_y,0),
         bug1(False, desired_position_x, desired_position_y,0)
+        bug2(False, desired_position_x, desired_position_y,0)
         # bug2(False)
     elif mode==1:
         bug0(False, desired_position_x, desired_position_y,0)
         bug1(True, desired_position_x, desired_position_y,0)
-        rospy.loginfo("bug1 in client")
-        # bug2(False)
+        bug2(False, desired_position_x, desired_position_y,0)
+    elif mode==2:
+        bug0(False, desired_position_x, desired_position_y,0)
+        bug1(False, desired_position_x, desired_position_y,0)
+        bug2(True, desired_position_x, desired_position_y,0)
+      
         
