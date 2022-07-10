@@ -44,7 +44,6 @@ if __name__ =="__main__":
         bug0(True, desired_position_x, desired_position_y,0),
         bug1(False, desired_position_x, desired_position_y,0)
         bug2(False, desired_position_x, desired_position_y,0)
-        # bug2(False)
     elif mode==1:
         bug0(False, desired_position_x, desired_position_y,0)
         bug1(True, desired_position_x, desired_position_y,0)
