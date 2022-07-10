@@ -47,11 +47,14 @@ class FollowWall:
         rate = rospy.Rate(20)
         #print("*************follow the wall*************")
         #print(self.active)
+        rospy.loginfo(self.turning)
+        print("^^^^^^^^^^^^^^^^^^",self.turning)
+
         if self.turning=="left":
             self.turn = self.turn_left
         else:
             self.turn=self.turn_right
-            
+
         while not rospy.is_shutdown():
             if not self.active:
                 rate.sleep()
@@ -61,7 +64,7 @@ class FollowWall:
                 msg = self.find_wall()
             elif self.state == 1:
 
-                msg = self.turn()
+                msg = self.turn_left()
             elif self.state == 2:
                 msg = self.follow_the_wall()
             else:

@@ -80,7 +80,7 @@ class Bug:
                 if self.calc_dist_points(self.position,self.desired_position)<self.calc_dist_points(self.circumnavigate_closet_point,self.desired_position):
                     self.circumnavigate_closet_point=self.position
 
-                if self.count_state_time>5 and self.calc_dist_points(self.position,self.circumnavigate_starting_point)<0.2:
+                if self.count_state_time>10 and self.calc_dist_points(self.position,self.circumnavigate_starting_point)<0.2:
                     self.change_state(2)
                 # less than 30 degrees
             elif self.state==2:

@@ -6,16 +6,22 @@ import random
 
 if __name__ =="__main__":
     rospy.init_node("client")
-    count_time=0
-    pub = rospy.Publisher('wk2Bot3/cmd_vel',Twist,queue_size=10)
+    count_time=2
+    pub = rospy.Publisher('wk2Bot3/cmd_vel',Twist,queue_size=1)
     twist =Twist()
-    rate = rospy.Rate(1)
+   
+    rate=rospy.Rate(1)
     while count_time<10:
         twist.linear.x=0.5
         twist.angular.z=(random.random()-0.5)*10
         pub.publish(twist)
         count_time+=1
         rate.sleep()
+
+
+    twist.linear.x=0
+    twist.angular.z=0
+    pub.publish(twist)
        
         
 
