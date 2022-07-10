@@ -74,13 +74,11 @@ class Bug:
                     self.change_state(1)
 
             elif self.state == 1:
-                desired_yaw = math.atan2(self.desired_position.y - self.position.y, self.desired_position.x - self.position.x)
-                err_yaw = self.normalize_angle(desired_yaw - self.yaw)
-
                 if self.calc_dist_points(self.position,self.desired_position)<self.calc_dist_points(self.circumnavigate_closet_point,self.desired_position):
                     self.circumnavigate_closet_point=self.position
+                  #  rospy.loginfo(self.circumnavigate_closet_point)
 
-                if self.count_state_time>10 and self.calc_dist_points(self.position,self.circumnavigate_starting_point)<0.2:
+                if self.count_state_time>5 and self.calc_dist_points(self.position,self.circumnavigate_starting_point)<0.2:
                     self.change_state(2)
                 # less than 30 degrees
             elif self.state==2:
@@ -104,16 +102,16 @@ class Bug:
         self.count_state_time=0
        
         if state==0:
-            self.go_to_point(True,1.5,"left")
+            self.go_to_point(True,2,"left")
             self.follow_wall(False,1.5,"left")
 
         if state==1:
             self.go_to_point(False,1.5,"left")
-            self.follow_wall(True,1,"left")
+            self.follow_wall(True,0.5,"left")
 
         if state==2:
             self.go_to_point(False,1.5,"left")
-            self.follow_wall(True,1,"left")  
+            self.follow_wall(True,0.5,"left")  
 
 
     def calc_dist_points(self,point1,point2):

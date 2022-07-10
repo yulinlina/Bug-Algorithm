@@ -127,7 +127,7 @@ class FollowWall:
 
     def find_wall(self):
         msg =Twist()
-        msg.linear.x=0.5
+        msg.linear.x=0.2
         msg.angular.z=-0.3
         return msg
 
