@@ -12,12 +12,12 @@
     <arg name="paused" default="false"/>
   </include>
   
-  <arg name="x" default="0"/>
-  <arg name="y" default="-9"/>
+  <arg name="x" default="9"/>
+  <arg name="y" default="1"/>
   <arg name="z" default="0"/>
   <arg name="roll" default="0"/>
   <arg name="pitch" default="0"/>
-  <arg name="yaw" default="1.58"/>
+  <arg name="yaw" default="3.14"/>
   <!--use a small script called spawn_model to make a service call request to the gazebo_ros ROS node-->
 
 

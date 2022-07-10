@@ -7,7 +7,8 @@ from geometry_msgs.msg import Point
 from sensor_msgs.msg import LaserScan
 from tf import transformations
 from nav_msgs.msg import Odometry
-from wk2Assignment_3.srv import * 
+from wk2Assignment_3.srv import SetBugBehaviour3
+from wk2Assignment_3.srv import HomingSignal3
 
 import rospy
 import math
@@ -49,9 +50,9 @@ class Bug:
         
         rospy.wait_for_service('GoToPoint_switch')
         rospy.wait_for_service('followWall_switch')
-        self.go_to_point=rospy.ServiceProxy('GoToPoint_switch',HomingSignal3)
-        self.follow_wall=rospy.ServiceProxy('followWall_switch',HomingSignal3)
-        #self.set_model_state=rospy.ServiceProxy()
+        self.go_to_point=rospy.ServiceProxy('GoToPoint_switch',SetBugBehaviour3)
+        self.follow_wall=rospy.ServiceProxy('followWall_switch',SetBugBehaviour3)
+     
 
         self.change_state(0)
         
@@ -64,7 +65,7 @@ class Bug:
                 
                 err_pos =math.sqrt(pow(self.desired_position.y-self.position.y,2)+pow(self.desired_position.x-self.position.x,2))
                 if err_pos<self.dist_threshold:
-                    rospy.loginfo("wk2Bot3 has reached the goal")
+                    rospy.loginfo("wk2Bot3 has reached the charging station located at (%s,%s)"%(self.desired_position.x,self.desired_position.y))
                     break
 
                 if 0.15<self.regions['front'] < 1 :
@@ -78,11 +79,12 @@ class Bug:
 
                 if self.calc_dist_points(self.position,self.desired_position)<self.calc_dist_points(self.circumnavigate_closet_point,self.desired_position):
                     self.circumnavigate_closet_point=self.position
+
                 if self.count_state_time>5 and self.calc_dist_points(self.position,self.circumnavigate_starting_point)<0.2:
                     self.change_state(2)
                 # less than 30 degrees
             elif self.state==2:
-                if self.calc_dist_points(self.position,self.calc_dist_points)<0.2:
+                if self.calc_dist_points(self.position,self.circumnavigate_closet_point)<0.2:
                     self.change_state(0)
             
             self.count_loop+=1
@@ -102,16 +104,16 @@ class Bug:
         self.count_state_time=0
        
         if state==0:
-            self.go_to_point(True,self.desired_position.x,self.desired_position.y,0)
-            self.follow_wall(False,self.desired_position.x,self.desired_position.y,0) 
+            self.go_to_point(True,1.5,"left")
+            self.follow_wall(False,1.5,"left")
 
         if state==1:
-            self.go_to_point(False,self.desired_position.x,self.desired_position.y,0)
-            self.follow_wall(True,self.desired_position.x,self.desired_position.y,0)
+            self.go_to_point(False,1.5,"left")
+            self.follow_wall(True,1.5,"left")
 
         if state==2:
-            self.go_to_point(False,self.desired_position.x,self.desired_position.y,0)
-            self.follow_wall(True,self.desired_position.x,self.desired_position.y,0)    
+            self.go_to_point(False,1.5,"left")
+            self.follow_wall(True,1.5,"left")  
 
 
     def calc_dist_points(self,point1,point2):
@@ -153,13 +155,13 @@ class Bug:
 
 def clbk_bug1(req):
     rospy.loginfo("callback in bug1")
-    if req.data:
+    if req.flag:
         Bug()
-    return True,"Done!"
+    return "Done!"
 
 if __name__=="__main__":
     rospy.init_node("bug1service")
   #  mode =int(input("Please choose the mode \n1 go to the point using bug0 algorithm \n 2 teleport"))
-    rospy.Service("bug1",SetBool,clbk_bug1)
+    rospy.Service("bug1",HomingSignal3,clbk_bug1)
     rospy.spin()
    

@@ -140,12 +140,12 @@ class Bug:
         return angle
 
 def clbk_bug0(req):
-    if req.data:
+    if req.flag:
         Bug()
-    return True,"Done!"
+    return "Done!"
     
 if __name__=="__main__":
     rospy.init_node("bug0service")
   #  mode =int(input("Please choose the mode \n1 go to the point using bug0 algorithm \n 2 teleport"))
-    rospy.Service("bug0",SetBool,clbk_bug0)
+    rospy.Service("bug0",HomingSignal3,clbk_bug0)
     rospy.spin()

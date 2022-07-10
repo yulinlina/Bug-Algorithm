@@ -6,6 +6,7 @@ from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
 from tf import transformations
 from wk2Assignment_3.srv import HomingSignal3
+from wk2Assignment_3.srv import SetBugBehaviour3
 
 
 # A partially completed python class used to make the robot follow a wall
@@ -33,6 +34,7 @@ class FollowWall:
             2: 'follow the wall',
         }
         self.state_description = ''
+        self.turning=''
         
 	# 	#Need to change the topic used to command the robot to move based on what you defined in your urdf file.
         self.pub_vel = rospy.Publisher('wk2Bot3/cmd_vel', Twist, queue_size=1)
@@ -40,11 +42,16 @@ class FollowWall:
 		#Need to change the topic used for publishing the laser data based on what you defined in your urdf file.
         self.sub_laser = rospy.Subscriber('/wk2Bot3/laser/scan', LaserScan, self.callback_laser)
 
-        rospy.Service('followWall_switch',HomingSignal3,self.HandleFollowWall)
+        rospy.Service('followWall_switch',SetBugBehaviour3,self.HandleFollowWall)
       
         rate = rospy.Rate(20)
         #print("*************follow the wall*************")
         #print(self.active)
+        if self.turning=="left":
+            self.turn = self.turn_left
+        else:
+            self.turn=self.turn_right
+            
         while not rospy.is_shutdown():
             if not self.active:
                 rate.sleep()
@@ -53,7 +60,8 @@ class FollowWall:
             if self.state == 0:
                 msg = self.find_wall()
             elif self.state == 1:
-                msg = self.turn_left()
+
+                msg = self.turn()
             elif self.state == 2:
                 msg = self.follow_the_wall()
             else:
@@ -142,6 +150,7 @@ class FollowWall:
 
     def HandleFollowWall(self,req):
         self.active=req.flag
+        self.turning=req.turning
         return "Done!"
 
 if __name__=='__main__':

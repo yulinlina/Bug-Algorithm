@@ -7,6 +7,7 @@ from geometry_msgs.msg import Twist, Point
 from nav_msgs.msg import Odometry
 from tf import transformations
 from wk2Assignment_3.srv import HomingSignal3
+from wk2Assignment_3.srv import SetBugBehaviour3
 
 
 # A partially completed python class used to move a robot from any point to a desired point
@@ -28,10 +29,9 @@ class GoToPoint:
         self.desired_position = Point()
         self.desired_position.x = rospy.get_param('des_pos_x')
         self.desired_position.y = rospy.get_param('des_pos_y')
-
-        
-
         self.desired_position.z = 0
+
+
         # Threshold parameters
         self.yaw_threshold = rospy.get_param('th_yaw') # unit: degree
         self.yaw_threshold *= math.pi/90 # convert to radian
@@ -40,10 +40,11 @@ class GoToPoint:
 
         #Need to change the topic used to command the robot to move based on what you defined in your urdf file.
         self.pub_vel = rospy.Publisher('wk2Bot3/cmd_vel', Twist, queue_size=10)
-		
+        self.speed=0
+
 		#Need to change the /odom topic based on what you defined in your urdf file.   
         self.sub_odom = rospy.Subscriber('/odom', Odometry, self.callback_odom)
-        rospy.Service('GoToPoint_switch',HomingSignal3,self.HandleGoToPoint)
+        rospy.Service('GoToPoint_switch',SetBugBehaviour3,self.HandleGoToPoint)
 
         rate = rospy.Rate(20)
         while not rospy.is_shutdown():
@@ -64,7 +65,8 @@ class GoToPoint:
     
     def HandleGoToPoint(self,req):
         self.active =req.flag
-        return "Done!"
+        self.speed=req.speed
+        return "Successful trigging!"
 
 
     def callback_odom(self,msg):
@@ -89,6 +91,7 @@ class GoToPoint:
         err_yaw =desired_yaw-self.yaw
 
         twist_msg =Twist()
+
         if math.fabs(err_yaw)>self.yaw_threshold:
             twist_msg.angular.z=0.7 if err_yaw>0 else -0.7
        # rospy.loginfo(twist_msg)
@@ -107,7 +110,7 @@ class GoToPoint:
           err_pos =math.sqrt(pow(des_pos.y-self.position.y,2)+pow(des_pos.x-self.position.x,2))
           if err_pos>self.dist_threshold:
               twist_msg =Twist()
-              twist_msg.linear.x=1
+              twist_msg.linear.x=self.speed
               self.pub_vel.publish(twist_msg)
           else:
             #print("Position error: [%s]"%err_pos)
