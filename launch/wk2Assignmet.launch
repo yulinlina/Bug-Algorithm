@@ -37,7 +37,7 @@
   <node pkg="wk2Assignment_3" type="FollowWall.py" name="follow_wall" output="screen"/>
   <node pkg="wk2Assignment_3" type="Bug0.py" name="bug0" output="screen"/>
   <node pkg="wk2Assignment_3" type="Bug1.py" name="bug1" output="screen"/>
-  <node pkg="wk2Assignment_3" type="client.py" name="client" output="screen"/>
+  <node pkg="wk2Assignment_3" type="Client.py" name="client" output="screen"/>
   
 
 </launch>
