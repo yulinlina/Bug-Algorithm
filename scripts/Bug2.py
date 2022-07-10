@@ -151,7 +151,6 @@ class Bug:
 
 
 def clbk_bug2(req):
-    rospy.loginfo("callback in bug2")
     if req.flag:
         Bug()
     return "Done!"
