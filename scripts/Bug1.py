@@ -109,11 +109,11 @@ class Bug:
 
         if state==1:
             self.go_to_point(False,1.5,"left")
-            self.follow_wall(True,1.5,"left")
+            self.follow_wall(True,1,"left")
 
         if state==2:
             self.go_to_point(False,1.5,"left")
-            self.follow_wall(True,1.5,"left")  
+            self.follow_wall(True,1,"left")  
 
 
     def calc_dist_points(self,point1,point2):

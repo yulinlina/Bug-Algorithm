@@ -35,7 +35,7 @@ class FollowWall:
         }
         self.state_description = ''
         self.turning=''
-        
+        self.speed =0
 	# 	#Need to change the topic used to command the robot to move based on what you defined in your urdf file.
         self.pub_vel = rospy.Publisher('wk2Bot3/cmd_vel', Twist, queue_size=1)
 		
@@ -45,26 +45,21 @@ class FollowWall:
         rospy.Service('followWall_switch',SetBugBehaviour3,self.HandleFollowWall)
       
         rate = rospy.Rate(20)
-        #print("*************follow the wall*************")
-        #print(self.active)
-        rospy.loginfo(self.turning)
-        print("^^^^^^^^^^^^^^^^^^",self.turning)
-
-        if self.turning=="left":
-            self.turn = self.turn_left
-        else:
-            self.turn=self.turn_right
-
         while not rospy.is_shutdown():
             if not self.active:
                 rate.sleep()
                 continue
+            if self.turning=="left":
+              self.turn = self.turn_left
+            else:
+              self.turn=self.turn_right
+
+
             msg = Twist()
             if self.state == 0:
                 msg = self.find_wall()
             elif self.state == 1:
-
-                msg = self.turn_left()
+                msg = self.turn()
             elif self.state == 2:
                 msg = self.follow_the_wall()
             else:
@@ -132,7 +127,7 @@ class FollowWall:
 
     def find_wall(self):
         msg =Twist()
-        msg.linear.x=0.2
+        msg.linear.x=0.5
         msg.angular.z=-0.3
         return msg
 
@@ -148,12 +143,14 @@ class FollowWall:
 
     def follow_the_wall(self):
         msg=Twist()
-        msg.linear.x=0.5
+        msg.linear.x=self.speed
         return msg
 
     def HandleFollowWall(self,req):
         self.active=req.flag
         self.turning=req.turning
+        self.speed=req.speed
+     
         return "Done!"
 
 if __name__=='__main__':
