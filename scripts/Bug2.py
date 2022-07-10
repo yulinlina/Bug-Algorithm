@@ -1,8 +1,9 @@
 #! /usr/bin/env python
 
-from gazebo_msgs.srv import SetModelState
+from gazebo_msgs.msg import ModelStates
 from turtlesim.srv import *
-from geometry_msgs.msg import Point
+from turtlesim.msg import *
+from geometry_msgs.msg import *
 from sensor_msgs.msg import LaserScan
 from tf import transformations
 from nav_msgs.msg import Odometry
@@ -12,7 +13,7 @@ import rospy
 import math
 
 class Bug:
-    def __init__(self,mode=1):
+    def __init__(self,direction,mode=1):
        
         rospy.loginfo("bug2 is run")
         self.state=0
@@ -20,14 +21,16 @@ class Bug:
             "Go to point",
             "Circumnavigate obstacle"
         ]
-
-        self.speed=0.5
+        self.reach=0
+        self.speed=1.0
         self.turning="left"
+        self.direction=direction
         self.yaw = 0
         self.raw_error_allowed = 5 * (math.pi / 180) # 5 degrees
 
         self.regions=None
         self.position=Point()
+        self.pose =Pose()
         self.initial_position=Point()
         self.initial_position.x=rospy.get_param('init_x')
         self.initial_position.y=rospy.get_param('init_y')
@@ -49,7 +52,7 @@ class Bug:
         self.dist_threshold = rospy.get_param('th_dist') # unit: meter
 
         self.sub_laser = rospy.Subscriber('/wk2Bot3/laser/scan', LaserScan, self.clbk_laser)
-        self.sub_odom = rospy.Subscriber('/odom', Odometry, self.clbk_odom)
+        self.sub_odom = rospy.Subscriber('/odom', Odometry, self.clbk_odom,self.direction)
         
         rospy.wait_for_service('GoToPoint_switch')
         rospy.wait_for_service('followWall_switch')
@@ -58,7 +61,7 @@ class Bug:
         #self.set_model_state=rospy.ServiceProxy()
 
         self.change_state(0)
-        
+       
         while not self.regions:
             continue
 
@@ -71,8 +74,12 @@ class Bug:
             if self.state == 0:
 
                 err_pos = math.sqrt(pow(self.desired_position.y-self.position.y,2)+pow(self.desired_position.x-self.position.x,2))
+                rate=rospy.Rate(1)
                 if err_pos < self.dist_threshold:
+                    self.reach=1
+                    rate.sleep()
                     rospy.loginfo("wk2Bot3 has reached the charging station located at (%s,%s)"%(self.desired_position.x,self.desired_position.y))
+                 
                     break
 
                 if 0.15 < self.regions['front'] < 1 :
@@ -89,7 +96,6 @@ class Bug:
 
             #rospy.loginfo("distance to line: [%.2f], position: [%.2f, %.2f]", self.distance_to_line(self.position), self.position.x, self.position.y)
             rate.sleep()
-          
 
     def change_state(self,state):
         self.state=state
@@ -120,7 +126,7 @@ class Bug:
     def calc_dist_points(self,point1,point2):
         return math.sqrt((point1.y-point2.y)**2+(point1.x-point2.x)**2)
 
-    def clbk_odom(self,msg):
+    def clbk_odom(self,msg,direction):
         # position
         self.position = msg.pose.pose.position
 
@@ -132,6 +138,24 @@ class Bug:
             msg.pose.pose.orientation.w)
         euler = transformations.euler_from_quaternion(quaternion)
         self.yaw = euler[2]
+        if self.reach:
+            if direction==0:
+                theta=0
+            elif direction==1:
+                theta=1.57
+            elif direction==2:
+                theta=3.14
+            else: 
+                theta=-1.57
+            rospy.loginfo("fix the dirction with: %s "%direction)
+            pub =rospy.Publisher("wk2Bot3",Twist,queue_size=10)
+            vel_cmd=Twist()
+            while math.fabs(self.yaw-theta)>0.2:
+                vel_cmd.angular.z=0.3
+                pub.publish(vel_cmd)
+            vel_cmd.angular.z=0
+            pub.publish(vel_cmd)
+
      
 
     def clbk_laser(self,msg):
@@ -152,7 +176,7 @@ class Bug:
 
 def clbk_bug2(req):
     if req.flag:
-        Bug()
+        Bug(req.direction)
     return "Done!"
 
 if __name__=="__main__":

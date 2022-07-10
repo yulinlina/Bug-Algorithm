@@ -3,6 +3,7 @@
 from std_srvs.srv import SetBool
 from gazebo_msgs.srv import SetModelState
 from turtlesim.srv import *
+from turtlesim.msg import*
 from geometry_msgs.msg import Point
 from sensor_msgs.msg import LaserScan
 from tf import transformations
@@ -14,7 +15,7 @@ import rospy
 import math
 
 class Bug:
-    def __init__(self,mode=1):
+    def __init__(self,direction,mode=1):
        
         rospy.loginfo("bug1 is run")
         self.state=0
@@ -25,7 +26,8 @@ class Bug:
         ]
         self.yaw = 0
         self.raw_error_allowed = 5 * (math.pi / 180) # 5 degrees
-
+        self.reach=0
+        self.direction=direction
         self.regions=None
         self.position=Point()
 
@@ -46,7 +48,7 @@ class Bug:
         self.dist_threshold = rospy.get_param('th_dist') # unit: meter
 
         self.sub_laser = rospy.Subscriber('/wk2Bot3/laser/scan', LaserScan, self.clbk_laser)
-        self.sub_odom = rospy.Subscriber('/odom', Odometry, self.clbk_odom)
+        self.sub_odom = rospy.Subscriber('/odom', Odometry, self.clbk_odom,self.direction)
         
         rospy.wait_for_service('GoToPoint_switch')
         rospy.wait_for_service('followWall_switch')
@@ -118,7 +120,7 @@ class Bug:
         return math.sqrt((point1.y-point2.y)**2+(point1.x-point2.x)**2)
        # rospy.loginfo(resp)
 
-    def clbk_odom(self,msg):
+    def clbk_odom(self,msg,direction):
         # position
         self.position = msg.pose.pose.position
 
@@ -130,6 +132,23 @@ class Bug:
             msg.pose.pose.orientation.w)
         euler = transformations.euler_from_quaternion(quaternion)
         self.yaw = euler[2]
+        if self.reach:
+            if direction==0:
+                theta=0
+            elif direction==1:
+                theta=1.57
+            elif direction==2:
+                theta=3.14
+            else: 
+                theta=-1.57
+            rospy.loginfo("fix the dirction with: %s "%direction)
+            pub =rospy.Publisher("wk2Bot3/cmd_vel",Twist,queue_size=10)
+            vel_cmd=Twist()
+            while math.fabs(self.yaw-theta)>0.2:
+                vel_cmd.angular.z=0.3
+                pub.publish(vel_cmd)
+            vel_cmd.angular.z=0
+            pub.publish(vel_cmd)
      
 
     def clbk_laser(self,msg):
@@ -153,7 +172,7 @@ class Bug:
 
 def clbk_bug1(req):
     if req.flag:
-        Bug()
+        Bug(req.direction)
     return "Done!"
 
 if __name__=="__main__":

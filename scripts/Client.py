@@ -38,19 +38,19 @@ if __name__ =="__main__":
 
     print("********************client is running***************************")
     mode = int(input("Please input the type of Bug algorithm you want to use \n 0 Bug0 \n 1 Bug1 \n 2 Bug2\n"))
-   
+    dirction=int(input("Please input the direction you want to go \n 0 East \n 1 West \n 2 South\n 3 North \n"))
   
     if mode==0:
-        bug0(True, desired_position_x, desired_position_y,0),
-        bug1(False, desired_position_x, desired_position_y,0)
-        bug2(False, desired_position_x, desired_position_y,0)
+        bug0(True, desired_position_x, desired_position_y,dirction),
+        bug1(False, desired_position_x, desired_position_y,dirction)
+        bug2(False, desired_position_x, desired_position_y,dirction)
     elif mode==1:
-        bug0(False, desired_position_x, desired_position_y,0)
-        bug1(True, desired_position_x, desired_position_y,0)
-        bug2(False, desired_position_x, desired_position_y,0)
+        bug0(False, desired_position_x, desired_position_y,dirction)
+        bug1(True, desired_position_x, desired_position_y,dirction)
+        bug2(False, desired_position_x, desired_position_y,dirction)
     elif mode==2:
-        bug0(False, desired_position_x, desired_position_y,0)
-        bug1(False, desired_position_x, desired_position_y,0)
-        bug2(True, desired_position_x, desired_position_y,0)
+        bug0(False, desired_position_x, desired_position_y,dirction)
+        bug1(False, desired_position_x, desired_position_y,dirction)
+        bug2(True, desired_position_x, desired_position_y,dirction)
       
         
