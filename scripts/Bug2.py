@@ -72,7 +72,7 @@ class Bug:
 
                 err_pos = math.sqrt(pow(self.desired_position.y-self.position.y,2)+pow(self.desired_position.x-self.position.x,2))
                 if err_pos < self.dist_threshold:
-                    rospy.loginfo("wk2Bot3 has reached the goal")
+                    rospy.loginfo("wk2Bot3 has reached the charging station located at (%s,%s)"%(self.desired_position.x,self.desired_position.y))
                     break
 
                 if 0.15 < self.regions['front'] < 1 :

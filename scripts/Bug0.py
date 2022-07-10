@@ -1,14 +1,13 @@
 #! /usr/bin/env python
 
-from std_srvs.srv import SetBool
-from gazebo_msgs.srv import SetModelState
+
 from turtlesim.srv import *
 from geometry_msgs.msg import Point
 from sensor_msgs.msg import LaserScan
 from tf import transformations
 from nav_msgs.msg import Odometry
-from wk2Assignment_3.srv import * 
-
+from wk2Assignment_3.srv import HomingSignal3
+from wk2Assignment_3.srv import SetBugBehaviour3
 import rospy
 import math
 
@@ -43,9 +42,9 @@ class Bug:
         
         rospy.wait_for_service('GoToPoint_switch')
         rospy.wait_for_service('followWall_switch')
-        self.go_to_point=rospy.ServiceProxy('GoToPoint_switch',HomingSignal3)
-        self.follow_wall=rospy.ServiceProxy('followWall_switch',HomingSignal3)
-        #self.set_model_state=rospy.ServiceProxy()
+        self.go_to_point=rospy.ServiceProxy('GoToPoint_switch',SetBugBehaviour3)
+        self.follow_wall=rospy.ServiceProxy('followWall_switch',SetBugBehaviour3)
+
 
         self.change_state(0)
         
@@ -58,7 +57,7 @@ class Bug:
                 
                 err_pos =math.sqrt(pow(self.desired_position.y-self.position.y,2)+pow(self.desired_position.x-self.position.x,2))
                 if err_pos<self.dist_threshold:
-                    rospy.loginfo("wk2Bot3 has reached the goal")
+                    rospy.loginfo("wk2Bot3 has reached the charging station located at (%s,%s)"%(self.desired_position.x,self.desired_position.y))
                     break
 
                 if 0.15<self.regions['front'] < 1 :
@@ -96,12 +95,12 @@ class Bug:
         rospy.loginfo(log)
        
         if state==0:
-            self.go_to_point(True,self.desired_position.x,self.desired_position.y,0)
-            self.follow_wall(False,self.desired_position.x,self.desired_position.y,0) 
+            self.go_to_point(True,1.5,"left")
+            self.follow_wall(False,1.5,"left") 
 
         if state==1:
-            self.follow_wall(True,self.desired_position.x,self.desired_position.y,0)
-            self.go_to_point(False,self.desired_position.x,self.desired_position.y,0)
+            self.follow_wall(True,1.5,"left")
+            self.go_to_point(False,1.5,"left")
 
 
            
