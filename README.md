@@ -1,4 +1,4 @@
-# Week2Agsignment
+# Bug algorithm in ROS 
 ## Requirement  
 ***pakename*** `wk2Assignment_3`
 *  launch folder: contains launch files
