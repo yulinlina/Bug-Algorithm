@@ -1,4 +1,6 @@
 # Bug algorithm in ROS 
+## 演示
+[如何使用Gazebo实现Bug](https://www.bilibili.com/video/BV15a411n7ju?vd_source=77f197efc9e66a13ad8a2235a6cb34be)
 ## Requirement  
 ***pakename*** `wk2Assignment_3`
 *  launch folder: contains launch files
