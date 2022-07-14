@@ -2,8 +2,11 @@
 ## 演示
 [如何使用Gazebo实现Bug](https://www.bilibili.com/video/BV15a411n7ju?vd_source=77f197efc9e66a13ad8a2235a6cb34be)
 ## 效果图
+1. 自定义服务  
 ![image](https://user-images.githubusercontent.com/77262518/178882651-fd6176b0-b127-4f8f-8a67-7f04f4cbe699.png)  
-![image](https://user-images.githubusercontent.com/77262518/178882608-e91fe28f-54de-48db-9df5-11ea884a5cf3.png)  
+2. 绕墙行走  
+![image](https://user-images.githubusercontent.com/77262518/178882608-e91fe28f-54de-48db-9df5-11ea884a5cf3.png)
+3. 到达终点  
 ![image](https://user-images.githubusercontent.com/77262518/178882686-daca6889-e1c7-485f-b382-2434b86590cf.png)
 
 ## Requirement  
